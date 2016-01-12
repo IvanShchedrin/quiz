@@ -20,7 +20,7 @@ coverage
 node_modules
 
 # Bower components
-public/vendor/bower_components/**.*
+public/vendor/bower_components/*
 
 ### Covers for IDE JetBrains WebStorm ###
 
