@@ -1,0 +1,24 @@
+{
+  "name": "quiz",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/oktava6/quiz",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/vendor",
+    "test",
+    "tests",
+    "public/vendor/bower_components"
+  ],
+  "authors": [
+    "Oktava <Ivan.Shchedrin@yandex.ru>"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6",
+    "jquery": "~2.2.0"
+  }
+}
