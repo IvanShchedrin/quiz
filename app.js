@@ -14,6 +14,7 @@ var exphbs  = require('express-handlebars');
 var mongoose = require('libs/mongoose');
 var MongoStore = require('connect-mongo')(session);
 
+
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 app.use(cookieParser());
@@ -48,6 +49,13 @@ app.use(function(err, req, res, next) {
     }
 });
 
-http.createServer(app).listen(config.get('port'), function(){
+var server = http.createServer(app);
+server.listen(config.get('port'), function(){
     log.info('Express server listening on port ' + config.get('port'));
+});
+
+var io = require('socket.io')(server);
+
+io.sockets.on('connection', function(socket) {
+    socket.emit('connected', {welcome: 'hello, user'});
 });

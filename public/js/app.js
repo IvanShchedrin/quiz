@@ -30,4 +30,11 @@ $(document).ready(function() {
         $('<form method=POST action=/logout>').submit();
         return false;
     });
+
+    var socket = io();
+
+    socket.on('connected', function(msg) {
+        alert(msg.welcome);
+    })
+
 });
