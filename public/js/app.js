@@ -31,10 +31,4 @@ $(document).ready(function() {
         return false;
     });
 
-    var socket = io();
-
-    socket.on('connected', function(msg) {
-        alert(msg.welcome);
-    })
-
 });

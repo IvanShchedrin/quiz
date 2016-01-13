@@ -57,5 +57,13 @@ server.listen(config.get('port'), function(){
 var io = require('socket.io')(server);
 
 io.sockets.on('connection', function(socket) {
-    socket.emit('connected', {welcome: 'hello, user'});
+    console.log('User connected');
+    socket.on('disconnect', function() {
+        console.log('User disconnected');
+    });
+
+    socket.on('message', function(msg, callback) {
+        socket.broadcast.emit('message', msg);
+        callback(msg);
+    });
 });
