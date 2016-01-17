@@ -19,6 +19,7 @@ exports.post = function(req, res, next) {
     User.authorize(username, password, function(err, user) {
         if (err) {
             if (err instanceof AuthError) {
+                console.log('Called HttpError');
                 return next(new HttpError(403, err.message))
             } else {
                 return next(err)

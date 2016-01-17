@@ -4,27 +4,28 @@ var app = express();
 var http = require('http');
 var path = require('path');
 
+
+var async = require('async');
+
 var config = require('config');
 var log = require('libs/log')(module);
 var HttpError = require('error').HttpError;
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var exphbs  = require('express-handlebars');
 var mongoose = require('libs/mongoose');
-var MongoStore = require('connect-mongo')(session);
 
+var sessionStore = require('libs/sessionStore');
 
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
-app.use(cookieParser());
 app.use(session({
     secret: config.get('session:secret'),
     resave: config.get('session:resave'),
     saveUninitialized: config.get('session:saveUninitialized'),
     key: config.get('session:key'),
     cookie: config.get('session:cookie'),
-    store: new MongoStore({mongooseConnection: mongoose.connection})
+    store: sessionStore
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,6 +41,8 @@ app.use(function(err, req, res, next) {
         err = new HttpError(err);
     }
 
+    console.log(err instanceof HttpError);
+
     if (err instanceof HttpError) {
         res.sendHTTPError(err);
     } else {
@@ -54,16 +57,5 @@ server.listen(config.get('port'), function(){
     log.info('Express server listening on port ' + config.get('port'));
 });
 
-var io = require('socket.io')(server);
-
-io.sockets.on('connection', function(socket) {
-    console.log('User connected');
-    socket.on('disconnect', function() {
-        console.log('User disconnected');
-    });
-
-    socket.on('message', function(msg, callback) {
-        socket.broadcast.emit('message', msg);
-        callback(msg);
-    });
-});
+var io = require('./socket')(server);
+app.set('io', io);

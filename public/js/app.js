@@ -18,7 +18,6 @@ $(document).ready(function() {
                     window.location.href = "/chat";
                 },
                 403: function() {
-                    //var error = JSON.parse(jqXHR.responseText);
                     $('.error', form).html('Wrong login or password');
                 }
             }
