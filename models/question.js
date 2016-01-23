@@ -12,4 +12,12 @@ var schema = new Schema({
     }
 });
 
+schema.statics.getRandQuestion = function(callback) {
+    this.count(function(err, count) {
+        if (err) return callback(err);
+        var rand = Math.floor(Math.random() * count);
+        this.findOne().skip(rand).exec(callback);
+    }.bind(this));
+};
+
 exports.Question = mongoose.model('Question', schema);

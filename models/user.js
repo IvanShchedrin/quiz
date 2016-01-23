@@ -54,7 +54,7 @@ schema.statics.authorize = function(username, password, callback) {
                 if (user.checkPassword(password)) {
                     callback(null, user);
                 } else {
-                    callback(new AuthError(403, "Пароль неверен"));
+                    callback(new AuthError(403, "Пароль неверен. Попробуйте другой"));
                 }
             } else {
                 callback(new AuthError(403, "Такого юзера не существует"));
@@ -72,10 +72,11 @@ schema.statics.authorize = function(username, password, callback) {
 
 exports.User = mongoose.model('User', schema);
 
-function AuthError(message) {
+function AuthError(code, message) {
     Error.apply(this, arguments);
     Error.captureStackTrace(this, AuthError);
 
+    this.code = code;
     this.message = message;
 }
 

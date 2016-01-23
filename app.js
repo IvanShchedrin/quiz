@@ -17,7 +17,7 @@ var mongoose = require('libs/mongoose');
 
 var sessionStore = require('libs/sessionStore');
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({defaultLayout: 'static'}));
 app.set('view engine', 'handlebars');
 app.use(session({
     secret: config.get('session:secret'),
@@ -40,8 +40,6 @@ app.use(function(err, req, res, next) {
     if (typeof err == 'number') {
         err = new HttpError(err);
     }
-
-    console.log(err instanceof HttpError);
 
     if (err instanceof HttpError) {
         res.sendHTTPError(err);

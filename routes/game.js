@@ -1,12 +1,11 @@
 exports.get = function(req, res) {
-
     if (req.user) {
-        res.render('about', {
+        res.render('game', {
+            layout: false,
             name: req.user.get('name'),
-            title_name: 'Quiz | О проекте'
+            title_name: 'Quiz'
         });
     } else {
-        res.render('about');
+        res.redirect('/');
     }
-
 };

@@ -15,9 +15,10 @@ $(document).ready(function() {
             statusCode:{
                 200: function() {
                     form.html("You entred the site").addClass('alert-success');
-                    window.location.href = "/chat";
+                    window.location.href = "/game";
                 },
-                403: function() {
+                403: function(res) {
+                    console.log(res.responseText);
                     $('.error', form).html('Wrong login or password');
                 }
             }

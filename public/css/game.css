@@ -1,0 +1,99 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    /*overflow: hidden;*/
+    width: 100%;
+}
+
+.game-wrap{
+    width: 100%;
+}
+
+.question-wrap, .letters-wrap, .variants-wrap, .answer-wrap{
+    background-color: #ddddff;
+    width: 80%;
+    height: 150px;
+    margin: 10px auto;
+    border: 1px solid #00b3ee;
+    padding: 10px;
+}
+
+
+.question-wrap .question{
+    display: table;
+    height: 100%;
+    width: 100%
+}
+.question-wrap .question span{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+
+.letters-wrap .letters{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+.letters-wrap .letters span{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 3em;
+    letter-spacing: 25px;
+}
+
+
+.variants-wrap .variants{
+    display: inline-block;
+    margin-right: 25px;
+}
+.variants-wrap .variants ul{
+    list-style-type: none;
+    padding-left: 0;
+    margin-left: 0;
+}
+.variants-wrap .variants ul li{
+    display: inline;
+}
+.variants-wrap .right-answer{
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+.variants-wrap .right-answer span{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 1.3em;
+}
+
+
+.answer-wrap .answer{
+    width: 100%;
+    height: 100%;
+    padding-top: 25px;
+}
+.answer-wrap form{
+    width: 305px;
+    margin: 0 auto;
+}
+.answer-wrap form input{
+    width: 200px;
+}
+.answer-wrap form button{
+    width: 100px;
+}
+.answer-wrap .timer{
+    margin: 0 auto;
+    width: 100px;
+    text-align: center;
+    font-size: 3em;
+}
+.answer-wrap .game-control{
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+}

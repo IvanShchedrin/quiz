@@ -7,7 +7,7 @@ module.exports = function(app) {
 
     app.post('/logout', require('./logout').post);
 
-    app.get('/chat', checkAuth, require('./chat').get);
+    app.get('/game', checkAuth, require('./game').get);
 
     app.get('/about', require('./about').get);
 

@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title_name}}</title>
+    <link rel="stylesheet" href="/vendor/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/game.css"/>
+    <script src="/vendor/bower_components/jquery/dist/jquery.min.js" defer></script>
+</head>
+<body>
+<div class="game-wrap">
+    <div class="question-wrap">
+        <div class="question">
+            <span></span>
+        </div>
+    </div>
+    <div class="letters-wrap">
+        <div class="letters">
+            <span></span>
+        </div>
+    </div>
+    <div class="variants-wrap"></div>
+    <div class="answer-wrap">
+        <div class="answer">
+            <form>
+                <input autocomplete="off" autofocus placeholder="Ваш ответ...">
+                <button>Ответ</button>
+            </form>
+            <div class="timer"></div>
+            <div class="game-control">
+                <button class="start">start</button>
+                <button class="stop">stop</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="vendor/bower_components/socket.io-client/socket.io.js" defer></script>
+<script src="js/game.js" defer></script>
+</body>
+</html>

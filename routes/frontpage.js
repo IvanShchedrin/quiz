@@ -5,7 +5,8 @@ var AuthError = require('models/user').AuthError;
 exports.get = function(req, res) {
     if (req.user) {
         res.render('frontpage', {
-            name: req.user.get('name')
+            name: req.user.get('name'),
+            title_name: 'Quiz | Главная'
         });
     } else {
         res.render('frontpage');
@@ -19,7 +20,6 @@ exports.post = function(req, res, next) {
     User.authorize(username, password, function(err, user) {
         if (err) {
             if (err instanceof AuthError) {
-                console.log('Called HttpError');
                 return next(new HttpError(403, err.message))
             } else {
                 return next(err)
