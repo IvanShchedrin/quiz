@@ -14,6 +14,9 @@ $(function() {
     $('.answer-wrap .game-control .start').on('click', function() {
         socket.emit('start game');
     });
+    $('.answer-wrap .game-control .stop').on('click', function() {
+        socket.emit('stop game');
+    });
 
     $answerForm.submit(function (e) {
         e.preventDefault();

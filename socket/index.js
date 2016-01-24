@@ -48,6 +48,10 @@ function getReady(io) {
 }
 
 function answering(io) {
+    if (_gameState == 0) {
+        return;
+    }
+
     _gameState = 2;
     io.sockets.emit('new question', {
         question: _question,
@@ -57,6 +61,12 @@ function answering(io) {
 
     var hintCount = 1;
 
+    var wordTimeout = setTimeout(function() {
+        if (_gameState === 2) {
+            _gameState = 4;
+        }
+    }, _answerDelay * _answer.length - 20);
+
     var hintInterval = setInterval(function() {
         if (_gameState === 2) {
             io.sockets.emit('hint', {
@@ -64,32 +74,22 @@ function answering(io) {
                 timer: _answerDelay
             });
             hintCount ++;
-            console.log(hintCount);
-            return;
-        }
-        if (_gameState === 3) {
-            console.log('in interval, state - 3');
-            clearInterval(hintInterval);
             return;
         }
         if (_gameState === 4) {
-            console.log('in interval, state - 4');
             clearInterval(hintInterval);
             io.sockets.emit('right answer', {
                 answer: _answer
             });
+            setTimeout(function() {
+                startGame(io);
+            }, _answerDelay);
             return;
         }
 
+        clearTimeout(wordTimeout);
         clearInterval(hintInterval);
     }, _answerDelay);
-
-    setTimeout(function() {
-        if (_gameState === 2) {
-            console.log('in timeout');
-            _gameState = 4;
-        }
-    }, _answerDelay * _answer.length - 20)
 
 }
 
@@ -115,6 +115,9 @@ function showTheme() {
 }
 
 function startGame(io) {
+    if (_gameState != 0 && _gameState != 4) {
+        return;
+    }
     getReady(io);
 
     setTimeout(function() {
@@ -163,26 +166,43 @@ module.exports = function(server) {
 
         socket
             .on('answer', function(answer) {
-                if (_answer == answer.toUpperCase()) {
-                    _gameState = 3;
-                    socket.broadcast.emit('right answer', {
-                        name: socket.handshake.user.name,
-                        answer: answer.toUpperCase()
-                    });
-                    socket.emit('you right', {
-                        answer: _answer,
-                        score: 13
+
+                if (_gameState === 2) {
+                    if (_answer == answer.toUpperCase()) {
+                        _gameState = 3;
+                        socket.broadcast.emit('right answer', {
+                            name: socket.handshake.user.name,
+                            answer: answer.toUpperCase()
+                        });
+                        socket.emit('you right', {
+                            answer: _answer,
+                            score: 13
+                        })
+                    } else {
+                        io.sockets.emit('wrong answer', {
+                            name: socket.handshake.user.name,
+                            answer: answer.toUpperCase()
+                        })
+                    }
+                } else if (_gameState === 3) {
+                    socket.emit('too late', {
+                        server: 'Слишком поздно. Ответ уже кто-то угадал'
                     })
-                } else {
-                    io.sockets.emit('wrong answer', {
-                        name: socket.handshake.user.name,
-                        answer: answer.toUpperCase()
+                } else if (_gameState === 4) {
+                    socket.emit('too late', {
+                        server: 'Слишком поздно. Время на ответ закончилось'
                     })
                 }
             })
             .on('start game', function() {
                 if (_gameState == 0) {
                     startGame(io);
+                }
+            })
+            .on('stop game', function() {
+                console.log('Stopping game. State is ' + _gameState);
+                if (_gameState != 0) {
+                    _gameState = 0;
                 }
             })
             .on('disconnect', function() {
