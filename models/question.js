@@ -9,6 +9,15 @@ var schema = new Schema({
     answer: {
         type: String,
         required: true
+    },
+    theme: {
+        type: String,
+        required: true
+    },
+    counter: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 

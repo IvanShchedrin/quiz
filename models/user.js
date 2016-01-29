@@ -3,12 +3,18 @@ var mongoose = require('libs/mongoose');
 var Schema = mongoose.Schema;
 var async = require('async');
 var util = require('util');
+var nodemailer = require('libs/nodemailer');
 
 var schema = new Schema({
     name: {
         type: String,
         unique: true,
         required: true
+    },
+    score: {
+        type: Number,
+        required: true,
+        default: 0
     },
     hashedPassword: {
         type: String,
@@ -18,9 +24,24 @@ var schema = new Schema({
         type: String,
         required: true
     },
+    email: {
+        type: String
+    },
     created: {
         type: Date,
+        required: true,
         default: Date.now
+    },
+    favTheme: {
+        type: String
+    },
+    lastOnline: {
+        type: Date
+    },
+    accStatus: {
+        type: Number,
+        required: true,
+        default: 0
     }
 });
 
@@ -58,16 +79,42 @@ schema.statics.authorize = function(username, password, callback) {
                 }
             } else {
                 callback(new AuthError(403, "Такого юзера не существует"));
-                /*
-                user = new User({name: username, password: password});
-                user.save(function(err) {
-                    if (err) return callback(err);
-                    callback(null, user);
-                })
-                */
             }
         }
     ], callback);
+};
+
+schema.statics.createUser = function(data, callback) {
+    var User = this;
+    var confirmString = Math.random().toString(36).substring(2);
+
+    User.findOne({name: data.login}, function(err, user) {
+        if (err) return callback(err);
+
+        if (user) {
+            callback(new AuthError(403, 'Этот логин занят'));
+        } else {
+            var mailOptions = {
+                from: 'John <quiz.vik.info@gmail.com>',
+                to: data.email,
+                subject: 'Подтверждение регистрации в викторине',
+                html: '<p>Для подтверждения регистрации пройдите по <a href="http://localhost:3000/registry?reg=' + confirmString + '">ссылке</a>.</p>'
+            };
+
+            nodemailer.sendMail(mailOptions, function(err, info){
+                if(err){
+                    console.log(err);
+                    return callback(new AuthError(403, 'Неправильный формат почтового адреса'));
+                }
+
+                var user = new User({name: data.login, password: data.password, email: data.email + '_|_' + confirmString});
+                user.save(function(err) {
+                    if (err) return callback(err);
+                    callback(null, user);
+                });
+            });
+        }
+    })
 };
 
 exports.User = mongoose.model('User', schema);

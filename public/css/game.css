@@ -9,7 +9,28 @@ html, body{
     width: 100%;
 }
 
+.menu{
+    display: block;
+    width: 80%;
+    height: 20px;
+    margin: 10px auto 5px;
+}
+.menu .links, .menu .user-control{
+    display: inline-block;
+    text-align: center;
+}
+.menu .links{
+    float: left;
+}
+.menu .user-control{
+    float: right;
+}
+.menu .user-control a{
+    margin-left: 20px;
+}
+
 .question-wrap, .letters-wrap, .variants-wrap, .answer-wrap{
+    position: relative;
     background-color: #ddddff;
     width: 80%;
     height: 150px;
@@ -29,6 +50,14 @@ html, body{
     vertical-align: middle;
     text-align: center;
     font-size: 1.3em;
+}
+.question-wrap .users-online{
+    position: absolute;
+}
+
+.question-wrap .theme{
+    position: absolute;
+    bottom: 5px;
 }
 
 
@@ -68,6 +97,35 @@ html, body{
     vertical-align: middle;
     text-align: center;
     font-size: 1.3em;
+}
+.variants-wrap .themes{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.variants-wrap .themes div{
+    margin: 0 3px;
+    padding: 13px;
+    width: 20%;
+    height: 60px;
+    text-align: center;
+    border: 1px solid black;
+    font-size: 1.5em;
+    background-color: #E6D7F4;
+    cursor: pointer;
+}
+.variants-wrap .themes div:hover{
+    background-color: #08486D;
+    color: #DBEFFA;
+    border: 3px solid #ddddff;
+}
+.variants-wrap .themes .clicked{
+    background-color: #08486D;
+    color: #DBEFFA;
+    border: 3px solid #ddddff;
 }
 
 

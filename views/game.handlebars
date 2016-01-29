@@ -8,8 +8,23 @@
     <script src="/vendor/bower_components/jquery/dist/jquery.min.js" defer></script>
 </head>
 <body>
+<div class="menu">
+    <div class="links">
+        <a href="/">На главную</a>
+    </div>
+    <div class="user-control">
+        <a href="/profile">{{username}}</a>
+        <a href="" id="log_out">Выйти</a>
+    </div>
+</div>
 <div class="game-wrap">
     <div class="question-wrap">
+        <div class="users-online">
+            <span></span>
+        </div>
+        <div class="theme">
+            <span></span>
+        </div>
         <div class="question">
             <span></span>
         </div>

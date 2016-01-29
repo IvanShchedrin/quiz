@@ -9,8 +9,10 @@ var Question = require('models/question').Question;
 var _numUser = 0;
 var _answer = '';
 var _question = '';
-// 0 - stopped, 1 - get ready, 2 - answering, 3 - somebody answered, 4 - anybody answered, 5 - choosing theme, 6 - showing theme
+var _currentTheme = '';
+// 0 - stopped, 1 - get ready, 2 - answering, 3 - somebody answered, 4 - nobody answered, 5 - choosing theme
 var _gameState = 0;
+//var _delayStarted = 0;
 var _answerDelay = 5000;
 
 function loadUser(session, callback) {
@@ -33,10 +35,13 @@ function loadUser(session, callback) {
 }
 
 function getReady(io) {
+    _currentTheme = 'Все подряд ' + Math.random();
     _gameState = 1;
     io.sockets.emit('get ready', {
-        timer: _answerDelay
+        timer: _answerDelay,
+        theme: _currentTheme
     });
+    //_delayStarted = new Date().getTime();
 
     Question.getRandQuestion(function(err, question) {
         if (err) {
@@ -58,6 +63,7 @@ function answering(io) {
         letters: getHintWord(0),
         timer: _answerDelay
     });
+    //_delayStarted = new Date().getTime();
 
     var hintCount = 1;
 
@@ -73,6 +79,7 @@ function answering(io) {
                 letters: getHintWord(hintCount),
                 timer: _answerDelay
             });
+            //_delayStarted = new Date().getTime();
             hintCount ++;
             return;
         }
@@ -102,20 +109,48 @@ function getHintWord(count) {
     return word;
 }
 
-function rightAnswer() {
+function rightAnswer(io, socket) {
+    _gameState = 3;
+    socket.broadcast.emit('right answer', {
+        name: socket.handshake.user.name,
+        answer: _answer,
+        score: 13
+    });
+    socket.emit('you right', {
+        answer: _answer,
+        score: 13
+    });
 
-}
+    setTimeout(function() {
+        _gameState = 5;
+        _currentTheme = '';
+        socket.emit('choose theme', {
+            themes: ['животные', 'история России', 'физика', 'Барак Обама'],
+            timer: _answerDelay
+        });
+        socket.broadcast.emit('wait theme', {
+            name: socket.handshake.user.name,
+            timer: _answerDelay
+        });
+        //_delayStarted = new Date().getTime();
 
-function chooseTheme() {
+        setTimeout(function() {
+            if (_gameState !== 5) {
+                return;
+            }
+            if (_currentTheme === '') {
+                _currentTheme = 'бороды мира';
+            }
 
-}
-
-function showTheme() {
+            startGame(io);
+        }, _answerDelay)
+    }, _answerDelay)
 
 }
 
 function startGame(io) {
-    if (_gameState != 0 && _gameState != 4) {
+    console.log('Game started. State: ' + _gameState);
+    if (_gameState != 0 && _gameState != 4 && _gameState != 5) {
         return;
     }
     getReady(io);
@@ -123,12 +158,6 @@ function startGame(io) {
     setTimeout(function() {
         answering(io);
     }, _answerDelay);
-}
-
-function stopGame(io) {
-    setTimeout(function() {
-        console.log(_numUser);
-    }, 5000)
 }
 
 module.exports = function(server) {
@@ -162,22 +191,23 @@ module.exports = function(server) {
     io.sockets.on('connection', function(socket) {
         _numUser++;
 
-        socket.broadcast.emit('message', socket.handshake.user.name + ' connected. Online - ' + _numUser);
+        socket.emit('connected', {
+            usersOnline: _numUser,
+            theme: _currentTheme,
+            question: _question,
+            gameState: _gameState
+        });
+        socket.broadcast.emit('somebody conn', {
+            usersOnline: _numUser,
+            name: socket.handshake.user.name
+        });
 
         socket
             .on('answer', function(answer) {
 
                 if (_gameState === 2) {
                     if (_answer == answer.toUpperCase()) {
-                        _gameState = 3;
-                        socket.broadcast.emit('right answer', {
-                            name: socket.handshake.user.name,
-                            answer: answer.toUpperCase()
-                        });
-                        socket.emit('you right', {
-                            answer: _answer,
-                            score: 13
-                        })
+                        rightAnswer(io, socket);
                     } else {
                         io.sockets.emit('wrong answer', {
                             name: socket.handshake.user.name,
@@ -194,19 +224,25 @@ module.exports = function(server) {
                     })
                 }
             })
+            .on('choosen theme', function(theme) {
+                if (_gameState === 5) {
+                    _currentTheme = theme;
+                }
+            })
             .on('start game', function() {
                 if (_gameState == 0) {
                     startGame(io);
                 }
             })
             .on('stop game', function() {
-                console.log('Stopping game. State is ' + _gameState);
-                if (_gameState != 0) {
-                    _gameState = 0;
-                }
+                _gameState = 0;
             })
             .on('disconnect', function() {
                 _numUser--;
+                socket.broadcast.emit('somebody disc', {
+                    usersOnline: _numUser,
+                    name: socket.handshake.user.name
+                })
             });
 
     });

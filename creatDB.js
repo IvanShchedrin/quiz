@@ -1,6 +1,7 @@
 var mongoose = require('libs/mongoose');
 var async = require('async');
 var log = require('libs/log')(module);
+var fs = require('fs');
 
 async.series([
     openConnection,
@@ -44,9 +45,9 @@ function requireModels(callback) {
 
 function createUsers(callback) {
     var users = [
-        {name: 'admin', password: 'difpass'},
-        {name: 'user1', password: 'password1'},
-        {name: 'user2', password: 'password2'}
+        {name: 'admin', password: 'difpass', email: 'oktava6@mail.ru'},
+        {name: 'user1', password: 'password1', email: 'oktava6@mail.ru'},
+        {name: 'user2', password: 'password2', email: 'oktava6@mail.ru'}
     ];
 
     async.each(users, function(userData, callback) {
@@ -56,14 +57,20 @@ function createUsers(callback) {
 }
 
 function createQuestions(callback) {
-    var questions = [
-        {question: 'Явление, обстоятельство, служащее основанием или обусловливающее другое явление.', answer: 'причина'},
-        {question: 'Автоматическое скорострельное оружие малого калибра.', answer: 'пулемет'},
-        {question: 'Лицо, награжденное орденом.', answer: 'кавалер'},
-        {question: 'Небольшая дверь в заборе, воротах, ограде.', answer: 'калитка'},
-        {question: 'Раздел анатомии, изучающий строение мышц, мышечной системы.', answer: 'миология'},
-        {question: 'Детеныш моржа.', answer: 'моржонок'}
-    ];
+    var result = fs.readFileSync('questions.txt', 'utf8').split('\r\n');
+
+    var questions = [];
+
+    for (var i = 0; i < result.length; i++) {
+        var obj = {
+            question: '',
+            answer: '',
+            theme: 'все подряд'
+        };
+        obj.question = result[i].split('|')[0];
+        obj.answer = result[i].split('|')[1];
+        questions.push(obj);
+    }
 
     async.each(questions, function(questionData, callback) {
         var question = new mongoose.models.Question(questionData);

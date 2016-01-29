@@ -7,7 +7,7 @@
     }
   },
   "session": {
-    "secret": "KillerIsJim",
+    "secret": "FuckingSecretWord",
     "resave": true,
     "saveUninitialized": true,
     "key": "sid",
@@ -16,5 +16,8 @@
       "httpOnly": true,
       "maxAge": null
     }
+  },
+  "nodemailer": {
+    "smtp": "smtps://quiz.vik.info%40gmail.com:atL1zKPXLRr60QpS8PjJmC@smtp.gmail.com"
   }
 }
