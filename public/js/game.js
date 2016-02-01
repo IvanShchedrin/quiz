@@ -74,7 +74,8 @@ $(function() {
 
             if (msg.name) {
                 $('<span/>', {
-                    html: 'Правильно ответил: <b>' + msg.name + '</b><br>Получает <b>' + msg.score + '</b> очков'
+                    html:   'Правильно ответил: <b>' + msg.name + '</b><br>Количество заработанных очков: <b>' +
+                            msg.score + '</b>.<br>Общий счет: ' + msg.totalScore
                 }).appendTo(div);
             } else {
                 $('<span/>', {
@@ -95,7 +96,8 @@ $(function() {
             $variants.empty();
 
             $('<span/>', {
-                html: 'Правильный ответ!<br> Вы заработали <b>' + msg.score + '</b> очков'
+                html:   'Правильный ответ!<br>Количество заработанных очков: <b>' + msg.score + '</b>.<br>Общий счет: ' +
+                        msg.totalScore
             }).appendTo(div);
 
             div.appendTo($variants);
@@ -130,10 +132,14 @@ $(function() {
         .on('get ready', function(msg) {
             $question.text('Приготовься к следующему вопросу.');
             $letters.empty();
-            $theme.html(msg.theme);
             setTimer(msg.timer);
             $timer.show();
             $variants.empty();
+            if (msg.theme == '') {
+                $theme.html('Все подряд')
+            } else {
+                $theme.html(msg.theme);
+            }
         })
         .on('choose theme', function(msg) {
             $variants.empty();
@@ -154,7 +160,7 @@ $(function() {
             var themeBtns = $variants.find('.themes div');
 
             themeBtns.on('click', function() {
-                socket.emit('choosen theme', this.innerHTML);
+                socket.emit('chosen theme', this.innerHTML);
                 themeBtns.removeClass('clicked');
                 $(this).addClass('clicked');
             });

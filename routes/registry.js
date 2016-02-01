@@ -20,7 +20,7 @@ exports.get = function(req, res, next) {
                     user.save(function(err) {
                         if (err) return next(err);
                         console.log('Почта подтверждена');
-                        res.redirect('/');
+                        res.redirect('/profile');
                     })
                 })
             } else {

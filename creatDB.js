@@ -1,17 +1,17 @@
 var mongoose = require('libs/mongoose');
 var async = require('async');
-var log = require('libs/log')(module);
 var fs = require('fs');
 
 async.series([
     openConnection,
-    dropDatabase,
+    //dropDatabase,
     //dropQuestions,
     requireModels,
-    createUsers,
-    createQuestions
+    //createUsers,
+    //createQuestions,
+    createThemes
 ], function(err) {
-    if (err) log.error(err);
+    if (err) console.log(err);
     mongoose.disconnect();
 });
 
@@ -35,6 +35,7 @@ function dropDatabase(callback) {
 function requireModels(callback) {
     require('models/user');
     require('models/question');
+    require('models/theme');
 
     async.each(Object.keys(mongoose.models), function(modelName, callback) {
         mongoose.models[modelName].ensureIndexes(callback);
@@ -69,12 +70,36 @@ function createQuestions(callback) {
         };
         obj.question = result[i].split('|')[0];
         obj.answer = result[i].split('|')[1];
+
         questions.push(obj);
     }
 
     async.each(questions, function(questionData, callback) {
         var question = new mongoose.models.Question(questionData);
         question.save(callback);
+    }, callback);
+
+    console.log('finished');
+
+}
+
+function createThemes(callback) {
+    var themes = [
+        {name: 'история'},
+        {name: 'природа'},
+        {name: 'география'},
+        {name: 'музыка'},
+        {name: 'личности'},
+        {name: 'кино'},
+        {name: 'спорт'},
+        {name: 'человек'},
+        {name: 'животные'},
+        {name: 'физика'}
+    ];
+
+    async.each(themes, function(themeData, callback) {
+        var theme = new mongoose.models.Theme(themeData);
+        theme.save(callback);
     }, callback);
 }
 

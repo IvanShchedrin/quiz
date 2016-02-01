@@ -98,18 +98,15 @@ schema.statics.createUser = function(data, callback) {
                 from: 'John <quiz.vik.info@gmail.com>',
                 to: data.email,
                 subject: 'Подтверждение регистрации в викторине',
-                html: '<p>Для подтверждения регистрации пройдите по <a href="http://localhost:3000/registry?reg=' + confirmString + '">ссылке</a>.</p>'
+                html: '<p>Для подтверждения регистрации пройдите по <a href="http://192.168.0.102:3000/registry?reg=' + confirmString + '">ссылке</a>.</p>'
             };
 
             nodemailer.sendMail(mailOptions, function(err, info){
-                if(err){
-                    console.log(err);
-                    return callback(new AuthError(403, 'Неправильный формат почтового адреса'));
-                }
+                if (err) return callback(new AuthError(403, 'Неправильный формат почтового адреса'));
 
                 var user = new User({name: data.login, password: data.password, email: data.email + '_|_' + confirmString});
                 user.save(function(err) {
-                    if (err) return callback(err);
+                    if (err) return callback(new AuthError(403, 'Не удалось создать нового пользователя. Попробуйте еще раз'));
                     callback(null, user);
                 });
             });
@@ -122,7 +119,6 @@ exports.User = mongoose.model('User', schema);
 function AuthError(code, message) {
     Error.apply(this, arguments);
     Error.captureStackTrace(this, AuthError);
-
     this.code = code;
     this.message = message;
 }

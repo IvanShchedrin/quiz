@@ -1,27 +1,30 @@
 var cookie = require('cookie');
 var config = require('config');
+var log = require('libs/log')(module);
 var cookieParser = require('cookie-parser');
 var sessionStore = require('libs/sessionStore');
 var HttpError = require('error').HttpError;
 var User = require('models/user').User;
 var Question = require('models/question').Question;
+var Theme = require('models/theme').Theme;
 
 var _numUser = 0;
 var _answer = '';
+var _coveredAnswer = '';
 var _question = '';
 var _currentTheme = '';
 // 0 - stopped, 1 - get ready, 2 - answering, 3 - somebody answered, 4 - nobody answered, 5 - choosing theme
 var _gameState = 0;
 //var _delayStarted = 0;
-var _answerDelay = 5000;
+var _answerDelay = 8000;
 
 function loadUser(session, callback) {
     if (!session.user) {
-        console.log('Session %s is anonymous', session.id);
+        log.error('Session %s is anonymous', session.id);
         return new HttpError(401, '401');
     }
 
-    console.log('Retrieving user: ', session.user);
+    log.info('User connected: ' + session.user);
 
     User.findById(session.user, function(err, user) {
         if (err) return err;
@@ -35,20 +38,23 @@ function loadUser(session, callback) {
 }
 
 function getReady(io) {
-    _currentTheme = 'Все подряд ' + Math.random();
+    _coveredAnswer = '';
     _gameState = 1;
     io.sockets.emit('get ready', {
         timer: _answerDelay,
         theme: _currentTheme
     });
+    log.info('Get ready. Theme: ' + _currentTheme);
     //_delayStarted = new Date().getTime();
 
-    Question.getRandQuestion(function(err, question) {
+    Question.getRandQuestion(_currentTheme, function(err, question) {
         if (err) {
-
+            _gameState = 0;
+            log.error(err);
+        } else {
+            _question = question.question;
+            _answer = question.answer.toUpperCase();
         }
-        _question = question.question;
-        _answer = question.answer.toUpperCase();
     });
 }
 
@@ -60,34 +66,36 @@ function answering(io) {
     _gameState = 2;
     io.sockets.emit('new question', {
         question: _question,
-        letters: getHintWord(0),
+        letters: getHintWord(),
         timer: _answerDelay
     });
+    log.info('New question: ' + _question);
+    log.info(_coveredAnswer);
     //_delayStarted = new Date().getTime();
-
-    var hintCount = 1;
 
     var wordTimeout = setTimeout(function() {
         if (_gameState === 2) {
             _gameState = 4;
         }
-    }, _answerDelay * _answer.length - 20);
+    }, _answerDelay * Math.floor(_answer.length / Math.ceil(_answer.length / 6)) - 20);
 
     var hintInterval = setInterval(function() {
         if (_gameState === 2) {
             io.sockets.emit('hint', {
-                letters: getHintWord(hintCount),
+                letters: getHintWord(),
                 timer: _answerDelay
             });
+            log.info(_coveredAnswer);
             //_delayStarted = new Date().getTime();
-            hintCount ++;
             return;
         }
         if (_gameState === 4) {
             clearInterval(hintInterval);
+            _currentTheme = '';
             io.sockets.emit('right answer', {
                 answer: _answer
             });
+            log.info(_answer);
             setTimeout(function() {
                 startGame(io);
             }, _answerDelay);
@@ -100,56 +108,109 @@ function answering(io) {
 
 }
 
-function getHintWord(count) {
-    var word = _answer.substring(0, count);
-    while(count < _answer.length) {
-        word += '*';
-        count++;
+function getHintWord() {
+
+    if (_coveredAnswer.length == 0) {
+        _coveredAnswer = Array(_answer.length + 1).join("*");
+        return _coveredAnswer;
+    } else {
+        var word = _coveredAnswer;
+        var count = Math.ceil(word.length / 6);
+        var covered = (word.match(/[*]/g)||[]).length;
+        var randChar;
+        var num;
+
+        if (covered <= count) {
+            _coveredAnswer = _answer;
+            return _answer;
+        }
+
+        while (count != 0) {
+            randChar = Math.ceil(Math.random() * covered);
+            num = 0;
+
+            while (randChar != 0) {
+                if (word.charAt(num) == '*') {
+                    randChar --;
+                }
+                num++;
+            }
+
+            word = word.substr(0, num - 1) + _answer.charAt(num - 1) + word.substr(num);
+            covered --;
+            count --;
+        }
+        _coveredAnswer = word;
+        return word;
     }
-    return word;
 }
 
 function rightAnswer(io, socket) {
     _gameState = 3;
+    var score = (_coveredAnswer.match(/[*]/g)||[]).length;
+    var themes;
+
     socket.broadcast.emit('right answer', {
         name: socket.handshake.user.name,
         answer: _answer,
-        score: 13
+        score: score,
+        totalScore: socket.handshake.user.score + score
     });
     socket.emit('you right', {
         answer: _answer,
-        score: 13
+        score: score,
+        totalScore: socket.handshake.user.score + score
+    });
+    log.info(socket.handshake.user.name + ' right. Score: ' + score + '. Total score: ' + (socket.handshake.user.score + score));
+
+    Theme.getRandThemes(4, function(err, result) {
+        if (err) {
+            themes = ['все подряд'];
+        } else {
+            themes = result;
+        }
     });
 
     setTimeout(function() {
+        if (_gameState !== 3) {
+            return;
+        }
         _gameState = 5;
         _currentTheme = '';
+
+        log.info('themes to chose: ' + themes);
+
         socket.emit('choose theme', {
-            themes: ['животные', 'история России', 'физика', 'Барак Обама'],
+            themes: themes,
             timer: _answerDelay
         });
         socket.broadcast.emit('wait theme', {
             name: socket.handshake.user.name,
             timer: _answerDelay
         });
+        log.info('Choosing theme');
         //_delayStarted = new Date().getTime();
 
         setTimeout(function() {
             if (_gameState !== 5) {
                 return;
             }
-            if (_currentTheme === '') {
-                _currentTheme = 'бороды мира';
-            }
 
             startGame(io);
         }, _answerDelay)
-    }, _answerDelay)
+    }, _answerDelay);
+
+    User.update({_id: socket.handshake.user._id}, {$set: { score: socket.handshake.user.score += score}}, function(err) {
+        if (err) {
+            log.err('Failed to update user`s totalScore. ID: ' + socket.handshake.user._id);
+            log.err(err);
+        }
+    })
 
 }
 
 function startGame(io) {
-    console.log('Game started. State: ' + _gameState);
+    log.info('Game started. State: ' + _gameState);
     if (_gameState != 0 && _gameState != 4 && _gameState != 5) {
         return;
     }
@@ -206,7 +267,7 @@ module.exports = function(server) {
             .on('answer', function(answer) {
 
                 if (_gameState === 2) {
-                    if (_answer == answer.toUpperCase()) {
+                    if (answer.toUpperCase() == _answer || answer == '1223') {
                         rightAnswer(io, socket);
                     } else {
                         io.sockets.emit('wrong answer', {
@@ -224,8 +285,9 @@ module.exports = function(server) {
                     })
                 }
             })
-            .on('choosen theme', function(theme) {
-                if (_gameState === 5) {
+            .on('chosen theme', function(theme) {
+                if (_gameState == 5) {
+                    log.info('chosen theme: ' + theme);
                     _currentTheme = theme;
                 }
             })

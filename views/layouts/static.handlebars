@@ -12,7 +12,14 @@
 <body>
 <nav class="navbar navbar-default" role="navigation">
     <ul class="nav navbar-nav navbar-left">
-        <li><a href="/">Main</a></li>
+        <li><a href="/">Главная</a></li>
+        {{#if name}}
+            <li><a href="/game">Начать игру!</a></li>
+            <li><a href="/profile">Личный кабинет</a></li>
+        {{else}}
+            <li><a href="/registry">Регистрация</a></li>
+        {{/if}}
+        <li><a href="/about">О проекте</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
         <li>

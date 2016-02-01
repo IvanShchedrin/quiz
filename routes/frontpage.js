@@ -5,8 +5,6 @@ var AuthError = require('models/user').AuthError;
 exports.get = function(req, res) {
     if (req.user) {
 
-        console.log(req.user);
-
         res.render('frontpage', {
             name: req.user.get('name'),
             title_name: 'Quiz | Главная'
