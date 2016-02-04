@@ -10,6 +10,7 @@ $(function() {
     var $timer = $('.game-wrap .answer-wrap .timer');
     var $online = $('.game-wrap .question-wrap .users-online span');
     var $theme = $('.game-wrap .question-wrap .theme span');
+    var $error = $('.game-wrap .answer-wrap .server-message');
 
     var _question = '';
     var _theme = '';
@@ -37,11 +38,14 @@ $(function() {
 
         return false;
     });
+
+
     function setTimer(time) {
         if (!time) return;
 
         time = time / 1000 - 1;
 
+        $timer.show();
         $timer.html(time);
 
         var timerId = setInterval(function() {
@@ -54,9 +58,25 @@ $(function() {
             $timer.html(0);
         }, (time * 1000) - 5);
     }
+
+
     socket
         .on('logout', function () {
             location.href = '/';
+        })
+        .on('hint', function (msg) {
+            if ($question.html() == '') {
+                $question.html(_question);
+            }
+            if ($theme.html() == '') {
+                if (_theme != '') {
+                    $theme.html(_theme);
+                }
+            }
+
+            $timer.show();
+            $letters.text(msg.letters);
+            setTimer(msg.timer);
         })
         .on('wrong answer', function (msg) {
             var div = $('<div/>').addClass('variants');
@@ -85,9 +105,6 @@ $(function() {
 
             div.appendTo($variants);
             $timer.hide();
-
-            $answerForm.find('input').attr('disabled', 'disabled');
-            $answerForm.find('button').attr('disabled', 'disabled');
         })
         .on('you right', function (msg) {
             var div = $('<div/>').addClass('right-answer');
@@ -102,36 +119,18 @@ $(function() {
 
             div.appendTo($variants);
             $timer.hide();
-
-            $answerForm.find('input').attr('disabled', 'disabled');
-            $answerForm.find('button').attr('disabled', 'disabled');
         })
         .on('new question', function (msg) {
             $question.text(msg.question);
             $letters.text(msg.letters);
             $variants.empty();
-
-            $answerForm.find('input').removeAttr('disabled');
-            $answerForm.find('button').removeAttr('disabled');
-            setTimer(msg.timer);
-        })
-        .on('hint', function (msg) {
-            if ($question.html() == '') {
-                $question.html(_question);
-            }
-            if ($theme.html() == '') {
-                if (_theme != '') {
-                    $theme.html(_theme);
-                }
-            }
-
-            $timer.show();
-            $letters.text(msg.letters);
+            $error.empty();
             setTimer(msg.timer);
         })
         .on('get ready', function(msg) {
             $question.text('Приготовься к следующему вопросу.');
             $letters.empty();
+            $error.empty();
             setTimer(msg.timer);
             $timer.show();
             $variants.empty();
@@ -141,10 +140,17 @@ $(function() {
                 $theme.html(msg.theme);
             }
         })
+        .on('wait theme', function(msg) {
+            $question.text('Подожди, пока ' + msg.name + ' выбирает тему');
+            $letters.empty();
+            $variants.empty();
+            setTimer(msg.timer);
+        })
         .on('choose theme', function(msg) {
             $variants.empty();
             $question.text('Выберите тему следующего вопроса');
             $letters.empty();
+            $error.empty();
 
             var themes = msg.themes;
             var div = $('<div/>').addClass('themes');
@@ -181,6 +187,32 @@ $(function() {
         })
         .on('somebody conn', function(msg) {
             $online.text('В сети ' + msg.usersOnline);
+        })
+        .on('too late', function(msg) {
+            switch (msg.gameState) {
+                case 1:
+                    $error.text('Слишком рано');
+                    break;
+                case 3:
+                    $error.text('Поздно. Ответ уже угадан');
+                    break;
+                case 4:
+                    $error.text('Поздно. Время вышло');
+                    break;
+                case 5:
+                    $error.text('Слишком рано. Идет выбор темы');
+                    break;
+                case 0:
+                    $error.text('Игра выключена');
+            }
+
+            if (this.errorTimer) {
+                clearTimeout(this.errorTimer);
+            }
+
+            this.errorTimer = setTimeout(function() {
+                $error.empty();
+            }, 3000);
         });
 
 });

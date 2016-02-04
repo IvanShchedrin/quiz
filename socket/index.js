@@ -16,7 +16,7 @@ var _currentTheme = '';
 // 0 - stopped, 1 - get ready, 2 - answering, 3 - somebody answered, 4 - nobody answered, 5 - choosing theme
 var _gameState = 0;
 //var _delayStarted = 0;
-var _answerDelay = 8000;
+var _answerDelay = 5000;
 
 function loadUser(session, callback) {
     if (!session.user) {
@@ -275,13 +275,9 @@ module.exports = function(server) {
                             answer: answer.toUpperCase()
                         })
                     }
-                } else if (_gameState === 3) {
+                } else {
                     socket.emit('too late', {
-                        server: 'Слишком поздно. Ответ уже кто-то угадал'
-                    })
-                } else if (_gameState === 4) {
-                    socket.emit('too late', {
-                        server: 'Слишком поздно. Время на ответ закончилось'
+                        gameState: _gameState
                     })
                 }
             })
