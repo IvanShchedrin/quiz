@@ -58,9 +58,7 @@ $(function() {
 
     function setTimer(time) {
         if (!time) return;
-
         time = time / 1000 - 1;
-
         $timer.show();
         $timer.html(time);
 
