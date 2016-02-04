@@ -11,6 +11,8 @@ $(function() {
     var $online = $('.game-wrap .question-wrap .users-online span');
     var $theme = $('.game-wrap .question-wrap .theme span');
     var $error = $('.game-wrap .answer-wrap .server-message');
+    var $chatTextarea = $('.chat-wrap .input-box textarea');
+    var $chatMessages = $('.chat-wrap .message-box');
 
     var _question = '';
     var _theme = '';
@@ -26,6 +28,8 @@ $(function() {
         return false;
     });
 
+    $chatMessages.scrollTop(1000000);
+
     $answerForm.submit(function (e) {
         e.preventDefault();
 
@@ -39,6 +43,18 @@ $(function() {
         return false;
     });
 
+    $('.chat-wrap .input-box form').submit(function(e) {
+        e.preventDefault();
+        addMessage('oktava', $chatTextarea.val());
+        $chatTextarea.val('');
+    });
+
+    $chatTextarea.keypress(function (e) {
+        if(e.which == 13) {
+            e.preventDefault();
+            $('.chat-wrap .input-box form').submit();
+        }
+    });
 
     function setTimer(time) {
         if (!time) return;
@@ -59,6 +75,21 @@ $(function() {
         }, (time * 1000) - 5);
     }
 
+    function addMessage(name, text) {
+        if (!name || !text) return;
+        text = text.slice(0, 255);
+
+        var div = $('<div/>').addClass('message');
+        var inDiv = $('<div/>').addClass('name');
+        $('<span/>', {html: name}).appendTo(inDiv);
+        inDiv.appendTo(div);
+
+        inDiv = $('<div/>').addClass('text');
+        $('<span/>', {html: text}).appendTo(inDiv);
+        inDiv.appendTo(div);
+        div.appendTo($chatMessages);
+        $chatMessages.scrollTop(1000000);
+    }
 
     socket
         .on('logout', function () {
