@@ -16,6 +16,7 @@ $(function() {
 
     var _question = '';
     var _theme = '';
+    var _name = '';
 
     $('.answer-wrap .game-control .start').on('click', function() {
         socket.emit('start game');
@@ -45,7 +46,7 @@ $(function() {
 
     $('.chat-wrap .input-box form').submit(function(e) {
         e.preventDefault();
-        addMessage('oktava', $chatTextarea.val());
+        sendMessage($chatTextarea.val());
         $chatTextarea.val('');
     });
 
@@ -87,11 +88,26 @@ $(function() {
         inDiv.appendTo(div);
         div.appendTo($chatMessages);
         $chatMessages.scrollTop(1000000);
+
+        if (name == _name) $chatMessages.children().last().addClass('me');
+    }
+
+    function sendMessage(text) {
+        if (!text) return;
+        text = text.slice(0, 255);
+
+        socket.emit('chat message', {
+            name: _name,
+            text: text
+        })
     }
 
     socket
         .on('logout', function () {
             location.href = '/';
+        })
+        .on('new message', function(msg) {
+            addMessage(msg.name, msg.text);
         })
         .on('hint', function (msg) {
             if ($question.html() == '') {
@@ -210,6 +226,7 @@ $(function() {
             $online.text('В сети ' + msg.usersOnline);
             _question = msg.question;
             _theme = msg.theme;
+            _name = msg.name
         })
         .on('somebody disc', function(msg) {
             $online.text('В сети ' + msg.usersOnline);

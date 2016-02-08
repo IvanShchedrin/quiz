@@ -256,7 +256,8 @@ module.exports = function(server) {
             usersOnline: _numUser,
             theme: _currentTheme,
             question: _question,
-            gameState: _gameState
+            gameState: _gameState,
+            name: socket.handshake.user.name
         });
         socket.broadcast.emit('somebody conn', {
             usersOnline: _numUser,
@@ -280,6 +281,12 @@ module.exports = function(server) {
                         gameState: _gameState
                     })
                 }
+            })
+            .on('chat message', function(msg) {
+                io.sockets.emit('new message', {
+                    name: msg.name,
+                    text: msg.text
+                });
             })
             .on('chosen theme', function(theme) {
                 if (_gameState == 5) {

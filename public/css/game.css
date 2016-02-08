@@ -202,6 +202,8 @@ html, body{
     margin-bottom: 5px;
     padding: 0 5px;
     width: 100%;
+    transition-property: background-color;
+    transition-duration: 2s;
 }
 .chat-wrap .me{
     background-color: #E6D7F4 !important;
