@@ -258,7 +258,7 @@ $(function() {
 
             this.errorTimer = setTimeout(function() {
                 $error.empty();
-            }, 3000);
+            }, 2500);
         });
 
 });

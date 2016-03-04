@@ -1,9 +1,9 @@
 var crypto = require('crypto');
-var mongoose = require('libs/mongoose');
+var mongoose = require('./../libs/mongoose');
 var Schema = mongoose.Schema;
 var async = require('async');
 var util = require('util');
-var nodemailer = require('libs/nodemailer');
+var nodemailer = require('./../libs/nodemailer');
 
 var schema = new Schema({
     name: {

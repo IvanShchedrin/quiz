@@ -1,12 +1,12 @@
 var cookie = require('cookie');
 var config = require('config');
-var log = require('libs/log')(module);
+var log = require('../libs/log')(module);
 var cookieParser = require('cookie-parser');
-var sessionStore = require('libs/sessionStore');
-var HttpError = require('error').HttpError;
-var User = require('models/user').User;
-var Question = require('models/question').Question;
-var Theme = require('models/theme').Theme;
+var sessionStore = require('../libs/sessionStore');
+var HttpError = require('../error').HttpError;
+var User = require('../models/user').User;
+var Question = require('../models/question').Question;
+var Theme = require('../models/theme').Theme;
 
 var _numUser = 0;
 var _answer = '';
@@ -247,7 +247,6 @@ module.exports = function(server) {
 
         });
     });
-
 
     io.sockets.on('connection', function(socket) {
         _numUser++;

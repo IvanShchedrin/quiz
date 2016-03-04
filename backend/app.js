@@ -4,20 +4,29 @@ var app = express();
 var http = require('http');
 var path = require('path');
 
+var config = require('../config');
 var async = require('async');
-
-var config = require('config');
-var log = require('libs/log')(module);
-var HttpError = require('error').HttpError;
+var HttpError = require('./error').HttpError;
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var exphbs  = require('express-handlebars');
-var mongoose = require('libs/mongoose');
+var mongoose = require('./libs/mongoose');
+var log = require('./libs/log')(module);
 
-var sessionStore = require('libs/sessionStore');
+var sessionStore = require('./libs/sessionStore');
 
-app.engine('handlebars', exphbs({defaultLayout: 'static'}));
+app.set('views', path.join(__dirname, 'views'));
+
+app.engine('handlebars', exphbs({
+    defaultLayout: 'static',
+    layoutsDir: './backend/views/layouts/'
+    /*partialsDir: [
+        './backend/views/'
+    ]*/
+}));
+
 app.set('view engine', 'handlebars');
+
 app.use(session({
     secret: config.get('session:secret'),
     resave: config.get('session:resave'),
@@ -29,11 +38,11 @@ app.use(session({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(require('middleware/sendHTTPError'));
-app.use(require('middleware/loadUser'));
+app.use(require('./middleware/sendHTTPError'));
+app.use(require('./middleware/loadUser'));
 
 app.use(express.static('./public'));
-require('routes')(app);
+require('./routes')(app);
 
 app.use(function(err, req, res, next) {
     if (typeof err == 'number') {
