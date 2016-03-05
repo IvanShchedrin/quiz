@@ -11,11 +11,11 @@ module.exports = {
     context: __dirname + '/frontend/game',
 
     entry: {
-        game: "./app.jsx"
+        game: "./app.js"
     },
 
     output: {
-        path: './public/js/',
+        path: './public/js/build/game/',
         filename: "game_react.js",
         library: "[name]"
     },
@@ -39,7 +39,7 @@ module.exports = {
     module: {
         loaders: [
             {
-                test: /\.jsx?/,
+                test: /\.js?/,
                 include: APP_DIR,
                 loader: 'babel'
             }
