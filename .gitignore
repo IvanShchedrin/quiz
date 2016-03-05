@@ -54,5 +54,5 @@ fabric.properties
 # Question database
 questions.txt
 
-# Dist
-dist
+# Built js files
+public/js/build
