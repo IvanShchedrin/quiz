@@ -53,3 +53,6 @@ fabric.properties
 
 # Question database
 questions.txt
+
+# Dist
+dist
