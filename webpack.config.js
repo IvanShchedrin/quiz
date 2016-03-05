@@ -11,24 +11,19 @@ module.exports = {
     context: __dirname + '/frontend/game',
 
     entry: {
-        game: "./app.jsx",
-        common: "./common.jsx"
+        game: "./app.jsx"
     },
 
     output: {
-        path: './dist',
-        filename: "[name].js",
+        path: './public/js/',
+        filename: "game_react.js",
         library: "[name]"
     },
 
     watch: NODE_ENV == 'development',
 
     plugins: [
-        new webpack.NoErrorsPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'common',
-            minChunks: 2
-        })
+        new webpack.NoErrorsPlugin()
     ],
 
     resolve: {

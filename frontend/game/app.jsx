@@ -6,7 +6,6 @@ class App extends React.Component {
         return (
             <div>
                 <p> Hello React!</p>
-                <Welcome />
             </div>
         );
     }
@@ -14,4 +13,4 @@ class App extends React.Component {
 }
 
 
-render(<App/>, document.getElementById('app'));
+render(<App/>, document.getElementById('root'));
