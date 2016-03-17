@@ -1,6 +1,6 @@
 import React from 'react';
 
-var TopMenu = React.createClass({
+export default class TopMenu extends React.Component{
     render() {
         return(
             <div className="top_menu">
@@ -10,6 +10,4 @@ var TopMenu = React.createClass({
             </div>
         )
     }
-});
-
-export default TopMenu;
+};

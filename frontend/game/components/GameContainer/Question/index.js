@@ -1,11 +1,9 @@
 import React from 'react';
 
-var Question = React.createClass({
+export default class Login extends React.Component{
     render() {
         return(
             <div className="question">{this.props.questionText}</div>
         )
     }
-});
-
-export default Question;
+}

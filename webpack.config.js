@@ -11,7 +11,7 @@ module.exports = {
     context: __dirname + '/frontend/game',
 
     entry: {
-        game: "./app.js"
+        game: "./app-client.js"
     },
 
     output: {

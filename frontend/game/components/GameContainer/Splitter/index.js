@@ -1,11 +1,9 @@
 import React from 'react';
 
-var Splitter = React.createClass({
+export default class Splitter extends React.Component{
     render() {
         return(
             <hr className="splitter"/>
         )
     }
-});
-
-export default Splitter;
+}

@@ -1,10 +1,9 @@
 import React from 'react';
 
-var Variants = React.createClass({
+class Variants extends React.Component{
     render() {
-        var ids = 101;
-        var wrongAnswers = this.props.userVariants.map(userVariant => {
-            return <UserVariant userVariant={userVariant} key={ids++}/>
+        var wrongAnswers = this.props.userVariants.map((userVariant, i) => {
+            return <UserVariant userVariant={userVariant} key={i}/>
         });
 
         return(
@@ -13,9 +12,9 @@ var Variants = React.createClass({
             </div>
         )
     }
-});
+}
 
-var UserVariant = React.createClass({
+class UserVariant extends React.Component{
     render() {
         return(
             <li className="user-variant">
@@ -23,6 +22,6 @@ var UserVariant = React.createClass({
             </li>
         )
     }
-});
+}
 
 export default Variants;

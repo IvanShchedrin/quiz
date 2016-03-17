@@ -1,6 +1,6 @@
 import React from 'react';
 
-var Hint = React.createClass({
+export default class Hint extends React.Component{
     render() {
         return(
             <div className="hint">
@@ -8,6 +8,4 @@ var Hint = React.createClass({
             </div>
         )
     }
-});
-
-export default Hint;
+}
