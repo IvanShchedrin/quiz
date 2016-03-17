@@ -16,7 +16,7 @@ export default class GameContainer extends React.Component{
                 <Splitter />
                 <Hint hint={this.props.hint} />
                 <Splitter />
-                <Variants userVariants={[]}/>
+                <Variants userVariants={this.props.userVariants}/>
                 <InputArea emit={this.props.emit} timeLeft="3" />
             </div>
         )
