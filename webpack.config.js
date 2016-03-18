@@ -6,6 +6,8 @@ const path = require('path');
 const NODE_ENV = process.env.NODE_ENV || 'development';
 const APP_DIR = path.resolve(__dirname, 'frontend/game');
 
+const prefix = 'autoprefixer?browsers=last 2 version';
+
 // only game page (react + socket.io)
 module.exports = {
     context: __dirname + '/frontend/game',
@@ -42,6 +44,14 @@ module.exports = {
                 test: /\.js?/,
                 include: APP_DIR,
                 loader: 'babel'
+            },
+            {
+                test: /\.css/,
+                loader: 'style!css!'
+            },
+            {
+                test: /\.styl/,
+                loader: 'style!css!' + prefix + '!stylus'
             }
         ]
     }

@@ -11,7 +11,7 @@ export default class App extends React.Component{
             hint: '',
             theme: 'Quiz',
             question: '',
-            gameState: -1,
+            gameState: 0,
             name: '',
             userVariants: []
         };
