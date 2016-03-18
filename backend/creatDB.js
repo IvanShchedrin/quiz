@@ -1,4 +1,4 @@
-var mongoose = require('libs/mongoose');
+var mongoose = require('./libs/mongoose');
 var async = require('async');
 var fs = require('fs');
 

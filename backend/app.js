@@ -4,7 +4,7 @@ var app = express();
 var http = require('http');
 var path = require('path');
 
-var config = require('../config');
+var config = require('./../config');
 var async = require('async');
 var HttpError = require('./error').HttpError;
 var session = require('express-session');

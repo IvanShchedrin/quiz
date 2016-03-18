@@ -9,7 +9,6 @@ function getLogger(module) {
         transports: [
             new winston.transports.Console({
                 colorize: true,
-                level: ENV == 'development' ? 'debug' : 'error',
                 label: path
             })
         ]

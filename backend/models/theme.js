@@ -1,4 +1,4 @@
-var mongoose = require('../libs/mongoose'),
+var mongoose = require('./../libs/mongoose'),
     Schema = mongoose.Schema,
     random = require('mongoose-simple-random');
 

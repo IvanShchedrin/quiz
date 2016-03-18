@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "prod_build": "NODE_ENV=prod webpack",
-    "dev_build": "webpack"
+    "prod": "NODE_ENV=prod webpack",
+    "dev": "webpack",
+    "start": "node backend/app.js NODE_ENV=development"
   },
   "dependencies": {
     "async": "^1.5.1",
