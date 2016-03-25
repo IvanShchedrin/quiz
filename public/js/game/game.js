@@ -106,7 +106,7 @@ $(function() {
         .on('logout', function () {
             location.href = '/';
         })
-        .on('new message', function(msg) {
+        .on('new message', function(msg) {                                                                              // In message component
             addMessage(msg.name, msg.text);
         })
         .on('hint', function (msg) {
@@ -185,13 +185,13 @@ $(function() {
                 $theme.html(msg.theme);
             }
         })
-        .on('wait theme', function(msg) {
+        .on('wait theme', function(msg) {                                                                               // Add in Game component
             $question.text('Подожди, пока ' + msg.name + ' выбирает тему');
             $letters.empty();
             $variants.empty();
             setTimer(msg.timer);
         })
-        .on('choose theme', function(msg) {
+        .on('choose theme', function(msg) {                                                                             // Add in Game component after creation of 'choose theme' component
             $variants.empty();
             $question.text('Выберите тему следующего вопроса');
             $letters.empty();
@@ -228,13 +228,13 @@ $(function() {
             _theme = msg.theme;
             _name = msg.name
         })
-        .on('somebody disc', function(msg) {
+        .on('somebody disc', function(msg) {                                                                            // Add in Game after creation of 'users on-line' component
             $online.text('В сети ' + msg.usersOnline);
         })
-        .on('somebody conn', function(msg) {
+        .on('somebody conn', function(msg) {                                                                            // Add in Game after creation of 'users on-line' component
             $online.text('В сети ' + msg.usersOnline);
         })
-        .on('too late', function(msg) {
+        .on('too late', function(msg) {                                                                                 // Add in Game after creation of 'game state' functionality
             switch (msg.gameState) {
                 case 1:
                     $error.text('Слишком рано');

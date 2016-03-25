@@ -1,14 +1,29 @@
 import React from 'react';
 
-import Timer from './Timer';
-import InputAnswer from './InputAnswer';
-
 export default class InputArea extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.tryAnswer = this.tryAnswer.bind(this);
+    }
+
+    tryAnswer(elem) {
+        this.props.emit('answer', elem.target.answer.value);
+        elem.target.answer.value = '';
+    }
+
     render() {
         return(
             <div className="input-area">
-                <Timer timeLeft={this.props.timeLeft}/>
-                <InputAnswer emit={this.props.emit} />
+                <form action="javascript:void(0)" onSubmit={this.tryAnswer}>
+                    <input
+                        type="text"
+                        name="answer"
+                        autoComplete="off"
+                        placeholder="Я знаю ответ!"/>
+
+                    <button>Ответ</button>
+                </form>
             </div>
         )
     }

@@ -1,7 +1,9 @@
-import React from 'react';
+import React from 'react'
 import io from 'socket.io-client'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 import GameContainer from './GameContainer';
+//import './styles.styl';
 
 export default class App extends React.Component{
 
@@ -13,7 +15,10 @@ export default class App extends React.Component{
             question: '',
             gameState: 0,
             name: '',
-            userVariants: []
+            userVariants: [],
+            usersOnline: 0,
+            timeLeft: -1,
+            themesToChoose: []
         };
 
         this.emit = this.emit.bind(this);
@@ -28,9 +33,11 @@ export default class App extends React.Component{
         this.socket.on('connected', (data) => {
             this.setState({
                 theme: data.theme,
+                hint: data.hint,
                 question: data.question,
                 gameState: data.gameState,
-                name: data.name
+                name: data.name,
+                usersOnline: data.usersOnline
             })
         });
 
@@ -38,19 +45,22 @@ export default class App extends React.Component{
             this.setState({
                 question: data.question,
                 hint: data.letters,
-                userVariants: []
+                userVariants: [],
+                timeLeft: data.timer
             })
         });
 
         this.socket.on('right answer', data => {
             this.setState({
-                hint: data.answer
+                hint: data.answer,
+                timeLeft: -1
             })
         });
 
         this.socket.on('you right', data => {
             this.setState({
-                hint: data.answer
+                hint: data.answer,
+                timeLeft: -1
             })
         });
 
@@ -63,20 +73,28 @@ export default class App extends React.Component{
         this.socket.on('get ready', data => {
             this.setState({
                 theme: data.theme,
-                hint: ''
+                question: '',
+                hint: '',
+                timeLeft: data.timer
             })
         });
 
-        this.socket.on('hint', word => {
+        this.socket.on('hint', data => {
             this.setState({
-                hint: word.letters
+                hint: data.letters,
+                timeLeft: data.timer
             })
         });
 
-        this.socket.on('logout', () => {
+        this.socket.on('logout', function() {
             location.href = '/'
         });
 
+        this.socket.on('choose theme', data => {
+            this.setState({
+                themesToChoose: data.themes
+            })
+        })
     }
 
     emit(event, payload) {
@@ -85,7 +103,16 @@ export default class App extends React.Component{
 
     render() {
         return(
-            <GameContainer emit={this.emit} {...this.state}/>
+            <ReactCSSTransitionGroup
+                component="div"
+                transitionName = "fadeout"
+                transitionAppear = {true}
+                transitionAppearTimeout = {1000}
+                transitionEnter = {false}
+                transitionLeave = {false}>
+
+                <GameContainer emit={this.emit} {...this.state}/>
+            </ReactCSSTransitionGroup>
         )
     }
 }

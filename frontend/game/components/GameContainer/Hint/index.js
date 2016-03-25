@@ -1,12 +1,15 @@
-import React from 'react';
-import './styles.styl';
+import React, {PropTypes} from 'react'
+import ReactDOM from 'react-dom'
 
-export default class Hint extends React.Component{
+//import './styles.styl'
+
+export default class Hint extends React.Component {
+
     render() {
         return(
-            <div className="hint">
-                <span className="hint_letters">{this.props.hint}</span>
-            </div>
+            <span key={15}>{this.props.hint}</span>
         )
     }
 }
+
+Hint.propTypes = { hint: PropTypes.string };

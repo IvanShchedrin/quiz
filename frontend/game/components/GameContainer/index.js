@@ -1,11 +1,12 @@
 import React from 'react';
 
-import Question from './Question';
-import TopMenu from './TopMenu';
-import Splitter from './Splitter';
-import Hint from './Hint';
-import Variants from './Variants';
-import InputArea from './InputArea';
+import Question from './Question'
+import TopMenu from './TopMenu'
+import Splitter from './Splitter'
+import Hint from './Hint'
+import Variants from './Variants'
+import InputArea from './InputArea'
+import Timer from './Timer'
 
 export default class GameContainer extends React.Component{
     render() {
@@ -16,8 +17,10 @@ export default class GameContainer extends React.Component{
                 <Splitter />
                 <Hint hint={this.props.hint} />
                 <Splitter />
-                <Variants userVariants={this.props.userVariants}/>
-                <InputArea emit={this.props.emit} timeLeft="3" />
+                <Timer timeLeftStart={this.props.timeLeft} />
+                <Variants userVariants={this.props.userVariants} />
+                <Splitter />
+                <InputArea emit={this.props.emit}/>
             </div>
         )
     }

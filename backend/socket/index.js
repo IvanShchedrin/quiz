@@ -253,8 +253,9 @@ module.exports = function(server) {
 
         socket.emit('connected', {
             usersOnline: _numUser,
+            hint: _gameState == 2 ? _coveredAnswer : _gameState == 0 || _gameState == 1 ? '' : _answer,
             theme: _currentTheme,
-            question: _question,
+            question: _gameState == 0 || _gameState == 1 ? '' : _question,
             gameState: _gameState,
             name: socket.handshake.user.name
         });
@@ -300,6 +301,10 @@ module.exports = function(server) {
             })
             .on('stop game', function() {
                 _gameState = 0;
+                _answer = '';
+                _coveredAnswer = '';
+                _question = '';
+                _currentTheme = '';
             })
             .on('disconnect', function() {
                 _numUser--;

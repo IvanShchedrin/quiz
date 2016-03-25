@@ -1,25 +1,22 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 class Variants extends React.Component{
+
     render() {
         var wrongAnswers = this.props.userVariants.map((userVariant, i) => {
-            return <UserVariant userVariant={userVariant} key={i}/>
+            return(
+                <li className="user-variant" key={i}>
+                    {userVariant.name}: {userVariant.answer.toUpperCase()}
+                </li>
+            )
         });
 
         return(
             <div className="variants">
-                {wrongAnswers}
+                <ul>
+                    {wrongAnswers}
+                </ul>
             </div>
-        )
-    }
-}
-
-class UserVariant extends React.Component{
-    render() {
-        return(
-            <li className="user-variant">
-                {this.props.userVariant.name}: {this.props.userVariant.answer.toUpperCase()}
-            </li>
         )
     }
 }

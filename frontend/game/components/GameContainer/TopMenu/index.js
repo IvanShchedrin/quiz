@@ -1,13 +1,15 @@
 import React from 'react';
 
+import './style.styl'
+
 export default class TopMenu extends React.Component{
+
     render() {
         return(
             <div className="top_menu">
-                <span className="menu-left">&#x2630;</span>
-                <span className="menu-middle">{this.props.theme === '' ? 'Все подряд' :
-                        this.props.theme.charAt(0).toUpperCase() + this.props.theme.substr(1)}</span>
-                <span className="menu-right">&#x2709;</span>
+                <i className="fa fa-bars"></i>
+                <span className="menu-middle">{'Викторина' + (this.props.theme == '' ? '' : ' | ' + this.props.theme.toUpperCase())}</span>
+                <i className="fa fa-commenting-o"></i>
             </div>
         )
     }
