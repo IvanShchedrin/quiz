@@ -185,13 +185,13 @@ $(function() {
                 $theme.html(msg.theme);
             }
         })
-        .on('wait theme', function(msg) {                                                                               // Add in Game component
+        .on('wait theme', function(msg) {
             $question.text('Подожди, пока ' + msg.name + ' выбирает тему');
             $letters.empty();
             $variants.empty();
             setTimer(msg.timer);
         })
-        .on('choose theme', function(msg) {                                                                             // Add in Game component after creation of 'choose theme' component
+        .on('choose theme', function(msg) {
             $variants.empty();
             $question.text('Выберите тему следующего вопроса');
             $letters.empty();
@@ -211,7 +211,7 @@ $(function() {
             var themeBtns = $variants.find('.themes div');
 
             themeBtns.on('click', function() {
-                socket.emit('chosen theme', this.innerHTML);
+                socket.emit('choosen theme', this.innerHTML);
                 themeBtns.removeClass('clicked');
                 $(this).addClass('clicked');
             });

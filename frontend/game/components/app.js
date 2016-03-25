@@ -18,7 +18,11 @@ export default class App extends React.Component{
             userVariants: [],
             usersOnline: 0,
             timeLeft: -1,
-            themesToChoose: []
+            themesToChoose: [],
+            warning: {
+                type: '',
+                text: ''
+            }
         };
 
         this.emit = this.emit.bind(this);
@@ -75,6 +79,8 @@ export default class App extends React.Component{
                 theme: data.theme,
                 question: '',
                 hint: '',
+                themesToChoose: [],
+                userVariants: [],
                 timeLeft: data.timer
             })
         });
@@ -86,14 +92,59 @@ export default class App extends React.Component{
             })
         });
 
-        this.socket.on('logout', function() {
-            location.href = '/'
-        });
-
         this.socket.on('choose theme', data => {
             this.setState({
-                themesToChoose: data.themes
+                themesToChoose: data.themes,
+                timeLeft: data.timer
             })
+        });
+
+        this.socket.on('wait theme', data => {
+            this.setState({
+                timeLeft: data.timer
+            })
+        });
+
+        this.socket.on('too late', data => {
+            var reason;
+            switch (data.gameState) {
+                case 1:
+                    reason = 'Слишком рано';
+                    break;
+                case 3:
+                    reason = 'Поздно. Ответ уже угадан';
+                    break;
+                case 4:
+                    reason = 'Поздно. Время вышло';
+                    break;
+                case 5:
+                    reason = 'Слишком рано. Идет выбор темы';
+                    break;
+                case 0:
+                    reason = 'Игра выключена';
+            }
+
+            clearTimeout(this.warningTimeout);
+
+            this.warningTimeout = setTimeout(() => {
+                this.setState({
+                    warning: {
+                        type: '',
+                        text: ''
+                    }
+                })
+            }, 2500);
+
+            this.setState({
+                warning: {
+                    type: 'notNow',
+                    text: reason
+                }
+            })
+        });
+
+        this.socket.on('logout', function() {
+            location.href = '/'
         })
     }
 
