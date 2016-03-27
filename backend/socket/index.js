@@ -257,7 +257,8 @@ module.exports = function(server) {
             theme: _currentTheme,
             question: _gameState == 0 || _gameState == 1 ? '' : _question,
             gameState: _gameState,
-            name: socket.handshake.user.name
+            name: socket.handshake.user.name,
+            score: socket.handshake.user.score
         });
         socket.broadcast.emit('somebody conn', {
             usersOnline: _numUser,

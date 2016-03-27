@@ -7,19 +7,20 @@ export default class InputArea extends React.Component{
         this.tryAnswer = this.tryAnswer.bind(this);
     }
 
-    tryAnswer(elem) {
-        this.props.emit('answer', elem.target.answer.value);
-        elem.target.answer.value = '';
+    tryAnswer(e) {
+        this.props.emit('answer', e.target.answer.value.slice(0, 30));
+        e.target.answer.value = '';
     }
 
     render() {
         return(
-            <div className="input-area">
+            <div className="game-input-area">
                 <form action="javascript:void(0)" onSubmit={this.tryAnswer}>
                     <input
                         type="text"
                         name="answer"
                         autoComplete="off"
+                        maxLength={30}
                         placeholder="Я знаю ответ!"/>
 
                     <button>Ответ</button>

@@ -2,11 +2,15 @@ import React from 'react'
 import io from 'socket.io-client'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
-import GameContainer from './GameContainer';
-//import './styles.styl';
+import GameContainer from './GameContainer'
+import ChatContainer from './ChatContainer'
+import MenuContainer from './MenuContainer'
+
+import './styles.styl';
 
 export default class App extends React.Component{
 
+    // TODO: Change 'name' to prop, init on socket's 'connected'
     constructor() {
         super();
         this.state = {
@@ -15,13 +19,19 @@ export default class App extends React.Component{
             question: '',
             gameState: 0,
             name: '',
+            score: 0,
             userVariants: [],
-            usersOnline: 0,
+            usersOnline: '?',
             timeLeft: -1,
             themesToChoose: [],
+            messages: [],
             warning: {
+                // pulse - short light, wihout message (wrong answer, etc.)
+                // error - medium light, showing message (too late, etc.)
+                // info - long light, showing message (you right, etc.)
                 type: '',
-                text: ''
+                text: '',
+                time: ''
             }
         };
 
@@ -41,6 +51,7 @@ export default class App extends React.Component{
                 question: data.question,
                 gameState: data.gameState,
                 name: data.name,
+                score: data.score,
                 usersOnline: data.usersOnline
             })
         });
@@ -64,7 +75,8 @@ export default class App extends React.Component{
         this.socket.on('you right', data => {
             this.setState({
                 hint: data.answer,
-                timeLeft: -1
+                timeLeft: -1,
+                score: data.totalScore
             })
         });
 
@@ -143,6 +155,24 @@ export default class App extends React.Component{
             })
         });
 
+        this.socket.on('new message', (data) => {
+            this.setState({
+                messages: this.state.messages.concat(data)
+            })
+        });
+
+        this.socket.on('somebody disc', (data) => {
+            this.setState({
+                usersOnline: data.usersOnline
+            })
+        });
+
+        this.socket.on('somebody conn', (data) => {
+            this.setState({
+                usersOnline: data.usersOnline
+            })
+        });
+
         this.socket.on('logout', function() {
             location.href = '/'
         })
@@ -162,7 +192,10 @@ export default class App extends React.Component{
                 transitionEnter = {false}
                 transitionLeave = {false}>
 
-                <GameContainer emit={this.emit} {...this.state}/>
+                <MenuContainer name={this.state.name} score={this.state.score} />
+                <GameContainer emit={this.emit} {...this.state} />
+                <ChatContainer emit={this.emit} {...this.state} />
+
             </ReactCSSTransitionGroup>
         )
     }
