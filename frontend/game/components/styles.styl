@@ -1,8 +1,19 @@
-.fadeout-appear {
-  opacity: 0.01;
-}
+.fadeout-appear
+  opacity 0.01
+.fadeout-appear.fadeout-appear-active
+  opacity 1
+  transition opacity 500ms
 
-.fadeout-appear.fadeout-appear-active {
-  opacity: 1;
-  transition: opacity 1000ms ease-in;
-}
+
+.fadeout-enter
+  opacity 0.01
+.fadeout-enter.fadeout-enter-active
+  opacity 1
+  transition opacity 500ms
+
+
+.fadeout-leave
+  opacity 1
+.fadeout-leave.fadeout-leave-active
+  opacity 0.01
+  transition opacity 500ms

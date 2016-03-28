@@ -10,7 +10,6 @@ import './styles.styl';
 
 export default class App extends React.Component{
 
-    // TODO: Change 'name' to prop, init on socket's 'connected'
     constructor() {
         super();
         this.state = {
@@ -25,14 +24,7 @@ export default class App extends React.Component{
             timeLeft: -1,
             themesToChoose: [],
             messages: [],
-            warning: {
-                // pulse - short light, wihout message (wrong answer, etc.)
-                // error - medium light, showing message (too late, etc.)
-                // info - long light, showing message (you right, etc.)
-                type: '',
-                text: '',
-                time: ''
-            }
+            warning: ''
         };
 
         this.emit = this.emit.bind(this);
@@ -134,24 +126,21 @@ export default class App extends React.Component{
                     break;
                 case 0:
                     reason = 'Игра выключена';
+                    break;
+                default:
+                    reason = 'Ошибка';
             }
 
             clearTimeout(this.warningTimeout);
 
             this.warningTimeout = setTimeout(() => {
                 this.setState({
-                    warning: {
-                        type: '',
-                        text: ''
-                    }
+                    warning: ''
                 })
             }, 2500);
 
             this.setState({
-                warning: {
-                    type: 'notNow',
-                    text: reason
-                }
+                warning: reason
             })
         });
 

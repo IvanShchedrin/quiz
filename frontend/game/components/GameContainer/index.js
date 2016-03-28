@@ -1,5 +1,7 @@
 import React from 'react';
 
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+
 import Question     from './Question'
 import TopMenu      from './TopMenu'
 import Splitter     from './Splitter'
@@ -11,7 +13,14 @@ import Timer        from './Timer'
 import Warning      from './Warning'
 
 export default class GameContainer extends React.Component{
+
     render() {
+        var warning = null;
+
+        if (this.props.warning !== '') {
+            warning = <Warning warning={this.props.warning} />
+        }
+
         return(
             <div className="game-wrap">
                 <TopMenu theme={this.props.theme} />
@@ -30,11 +39,12 @@ export default class GameContainer extends React.Component{
                 <Splitter />
                 <InputArea emit={this.props.emit}/>
 
-                {
-                    this.props.warning.type == '' ?
-                    null :
-                    <Warning warning={this.props.warning} />
-                }
+                <ReactCSSTransitionGroup
+                    transitionName = "fadeout"
+                    transitionEnterTimeout = {500}
+                    transitionLeaveTimeout = {500}>
+                    {warning}
+                </ReactCSSTransitionGroup>
             </div>
         )
     }

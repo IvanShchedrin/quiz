@@ -1,12 +1,12 @@
 import React from 'react'
 
+import './styles.styl'
+
 export default class Warning extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.props.warning.text}
-            </div>
+            <span>{this.props.warning}</span>
         )
     }
 

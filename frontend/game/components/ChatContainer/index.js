@@ -10,7 +10,7 @@ export default class GameContainer extends React.Component{
 
     render() {
         return(
-            <div className="chat-wrap">
+            <div className="chat-container">
                 <TopMenu name={this.props.name} usersOnline={this.props.usersOnline} />
                 <MessageBox messages={this.props.messages} />
                 <InputArea emit={this.props.emit} name={this.props.name} />
