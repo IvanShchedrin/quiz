@@ -8,7 +8,7 @@ import MenuContainer from './MenuContainer'
 
 import './styles.styl';
 
-export default class App extends React.Component{
+export default class App extends React.Component {
 
     constructor() {
         super();
@@ -24,7 +24,14 @@ export default class App extends React.Component{
             timeLeft: -1,
             themesToChoose: [],
             messages: [],
-            warning: ''
+            warning: '',
+            inputArea: 0,
+            gratters: {
+                reason: '',
+                name: '',
+                scoreGained: 0,
+                scoreTotal: 0
+            }
         };
 
         this.emit = this.emit.bind(this);
@@ -44,31 +51,52 @@ export default class App extends React.Component{
                 gameState: data.gameState,
                 name: data.name,
                 score: data.score,
-                usersOnline: data.usersOnline
+                usersOnline: data.usersOnline,
+                inputArea: 1
             })
         });
 
         this.socket.on('new question', data => {
             this.setState({
-                question: data.question,
                 hint: data.letters,
+                question: data.question,
+                inputArea: 1,
                 userVariants: [],
-                timeLeft: data.timer
+                timeLeft: data.timer,
+                gratters: {}
             })
         });
 
         this.socket.on('right answer', data => {
+            var gratter = data.name ? {
+                reason: 'other',
+                name: data.name,
+                scoreGained: data.score,
+                scoreTotal: data.totalScore
+            } : {
+                reason: 'none'
+            };
+
             this.setState({
                 hint: data.answer,
-                timeLeft: -1
+                inputArea: 0,
+                timeLeft: -1,
+                gratters: gratter
             })
         });
 
         this.socket.on('you right', data => {
             this.setState({
                 hint: data.answer,
+                inputArea: 0,
                 timeLeft: -1,
-                score: data.totalScore
+                score: data.totalScore,
+                gratters: {
+                    reason: 'you',
+                    name: '',
+                    scoreGained: 7,
+                    scoreTotal: 389
+                }
             })
         });
 
@@ -85,7 +113,10 @@ export default class App extends React.Component{
                 hint: '',
                 themesToChoose: [],
                 userVariants: [],
-                timeLeft: data.timer
+                timeLeft: data.timer,
+                gratters: {
+                    reason: 'getReady'
+                }
             })
         });
 
@@ -99,13 +130,21 @@ export default class App extends React.Component{
         this.socket.on('choose theme', data => {
             this.setState({
                 themesToChoose: data.themes,
-                timeLeft: data.timer
+                timeLeft: data.timer,
+                hint: '',
+                gratters: {}
             })
         });
 
         this.socket.on('wait theme', data => {
             this.setState({
-                timeLeft: data.timer
+                hint: '',
+                userVariants: [],
+                timeLeft: data.timer,
+                gratters: {
+                    reason: 'waitTheme',
+                    name: data.name
+                }
             })
         });
 
