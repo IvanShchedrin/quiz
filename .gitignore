@@ -17,7 +17,7 @@ coverage
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-# node_modules
+node_modules
 
 # Bower components
 # public/vendor/bower_components/*
@@ -55,4 +55,4 @@ fabric.properties
 # questions.txt
 
 # Built js files
-# public/js/build
+public/js/build
