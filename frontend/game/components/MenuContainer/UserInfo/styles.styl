@@ -1,0 +1,95 @@
+.menu-container .user-info
+  height: 20%
+  text-align: center
+  position: relative
+
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+  background-color: #3c4658
+  color: #eaeaea
+  box-shadow: 0 0 45px 5px rgba(0,0,0, 0.5)
+
+  .info-nickname
+    font-weight: 400
+    font-size: 1.5em
+    padding-bottom: 3px
+    margin-bottom: 10px
+    border-bottom: 2px solid #eaeaea
+
+  .info-score
+    font-size: 1.2em
+
+  .fa-angle-left
+    position: absolute
+    font-size: 3.5rem
+    height: 100%
+    top: 0
+    right: 0
+    width: 4rem
+    text-align: center
+    display: flex
+    flex-direction: column
+    justify-content: center
+    color: #eaeaea
+    cursor: pointer
+
+    &:hover
+      background-color: #637493
+
+
+@media all and (max-height: 299px)
+  .menu-container .user-info
+    .info-nickname
+      font-size: 1em
+      padding-bottom: 0
+      margin-bottom: 5px
+    .info-score
+      font-size: .8em
+
+@media all and (max-height: 399px) and (min-height: 300px)
+  .menu-container .user-info
+    .info-nickname
+      font-size: 1.3em
+      padding-bottom: 0
+      margin-bottom: 5px
+    .info-score
+      font-size: 1em
+
+@media all and (max-height: 767px) and (min-height: 400px)
+  .menu-container .user-info
+    .info-nickname
+      font-size: 1.5em
+    .info-score
+      font-size: 1.3em
+
+@media all and (min-height: 768px)
+  .menu-container .user-info
+    .info-nickname
+      font-size: 1.8em
+      border-bottom: 3px solid #eaeaea
+    .info-score
+      font-size: 1.3em
+
+@media all and (min-height: 1024px)
+  .menu-container .user-info
+    .info-nickname
+      font-size: 2em
+      padding-bottom: 8px
+      margin-bottom: 20px
+    .info-score
+      font-size: 1.5em
+
+
+
+@media all and (max-width: 767px)
+  .menu-container .user-info .fa-angle-left
+      font-size: 4rem
+      width: 5rem
+
+@media all and (min-width: 1200px)
+  .menu-container .user-info .fa-angle-left
+      font-size: 3rem
+      width: 4rem

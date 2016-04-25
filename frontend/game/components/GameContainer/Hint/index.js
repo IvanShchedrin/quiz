@@ -1,13 +1,15 @@
+import './styles.styl'
+
 import React, {PropTypes} from 'react'
 import ReactDOM from 'react-dom'
-
-//import './styles.styl'
 
 export default class Hint extends React.Component {
 
     render() {
+        var style = this.props.hint.length > 19 ? {letterSpacing: '0rem'} : {};
+
         return(
-            <span key={15}>{this.props.hint}</span>
+            <div className="hint" key={15} style={style}>{this.props.hint}</div>
         )
     }
 }

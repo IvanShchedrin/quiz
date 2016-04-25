@@ -16,7 +16,7 @@ var _currentTheme = '';
 // 0 - stopped, 1 - get ready, 2 - answering, 3 - somebody answered, 4 - nobody answered, 5 - choosing theme
 var _gameState = 0;
 //var _delayStarted = 0;
-var _answerDelay = 8000;
+var _answerDelay = 6000;
 
 function loadUser(session, callback) {
     if (!session.user) {
@@ -111,12 +111,12 @@ function answering(io) {
 function getHintWord() {
 
     if (_coveredAnswer.length == 0) {
-        _coveredAnswer = Array(_answer.length + 1).join("*");
+        _coveredAnswer = Array(_answer.length + 1).join("#");
         return _coveredAnswer;
     } else {
         var word = _coveredAnswer;
         var count = Math.ceil(word.length / 6);
-        var covered = (word.match(/[*]/g)||[]).length;
+        var covered = (word.match(/[#]/g)||[]).length;
         var randChar;
         var num;
 
@@ -130,7 +130,7 @@ function getHintWord() {
             num = 0;
 
             while (randChar != 0) {
-                if (word.charAt(num) == '*') {
+                if (word.charAt(num) == '#') {
                     randChar --;
                 }
                 num++;
@@ -147,7 +147,7 @@ function getHintWord() {
 
 function rightAnswer(io, socket) {
     _gameState = 3;
-    var score = (_coveredAnswer.match(/[*]/g)||[]).length;
+    var score = (_coveredAnswer.match(/[#]/g)||[]).length;
     var themes;
 
     socket.broadcast.emit('right answer', {

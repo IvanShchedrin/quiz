@@ -1,6 +1,6 @@
-import React from 'react'
+import './styles.styl'
 
-import Message from './../Message'
+import React from 'react'
 
 export default class MessageBox extends React.Component{
 
@@ -12,8 +12,21 @@ export default class MessageBox extends React.Component{
         });
 
         return(
-            <div className="message_box">
+            <div className="message-box">
                 {messages}
+            </div>
+        )
+    }
+
+}
+
+class Message extends React.Component{
+
+    render() {
+        return(
+            <div className="message">
+                <span className="nickname">{this.props.name}</span>
+                {this.props.text}
             </div>
         )
     }

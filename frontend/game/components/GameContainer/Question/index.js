@@ -1,4 +1,6 @@
-import React from 'react';
+import './styles.styl'
+
+import React from 'react'
 
 export default class Login extends React.Component{
     render() {

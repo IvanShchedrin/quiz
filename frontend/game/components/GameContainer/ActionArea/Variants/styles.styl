@@ -1,0 +1,49 @@
+.game-wrap .action-area .variants
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+
+  ul
+    list-style: none
+    padding: 0
+    margin: 0
+
+    li
+      position: absolute
+      padding: 15px 20px
+      border: 2px solid #222222
+      border-radius: 3px
+      font-size: 1.8rem
+      opacity: 0
+
+      animation-duration: 5s
+      animation-name: fadeOut
+
+
+@keyframes fadeOut
+  0%
+    opacity: .3
+  3%
+    opacity: 1
+    transform: scale(1.5, 1.5)
+  5%
+    transform: scale(.9, .9)
+  7%
+    transform: scale(1.1, 1.1)
+  9%
+    transform: scale(1, 1)
+  30%
+    opacity: 1
+  100%
+    opacity: 0
+
+
+@media (max-width: 768px)
+  .game-wrap .action-area .variants ul li
+    padding: 10px 15px
+
+@media (max-width: 360px)
+  .game-wrap .action-area .variants ul li
+    font-size: 1.5rem
+    padding: 8px 12px

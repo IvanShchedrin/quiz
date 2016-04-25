@@ -6,7 +6,7 @@ export default class Warning extends React.Component {
 
     render() {
         return (
-            <span>{this.props.warning}</span>
+            <div>{this.props.warning}</div>
         )
     }
 

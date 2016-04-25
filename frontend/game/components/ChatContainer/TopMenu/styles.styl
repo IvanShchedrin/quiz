@@ -1,4 +1,4 @@
-.game-wrap .top-menu
+.chat-container .chat-top-menu
   height: 4.25rem
   overflow: hidden
   z-index: 5
@@ -12,45 +12,42 @@
   color: #eaeaea
   box-shadow: 0 0 20px 5px rgba(0,0,0,0.4);
 
-  .menu-middle
-    font-size: 1.5rem
+  &>span
+    margin: 0 1rem
 
-  .fa-bars,.fa-commenting-o,.fa-angle-right
+  .fa-angle-right
+    display: none
     font-size: 1.5rem
     cursor: pointer
     height: 100%
     width: 4rem
     text-align: center
     line-height: 4rem
-    transition: background-color .2s
 
     &:hover
       background-color: #637493
 
-  .fa-angle-right
-    margin-right: 5px
-
 
 @media all and (max-width: 767px)
-  .game-wrap .top-menu
+  .chat-container .chat-top-menu
     height: 5rem
 
-    .menu-middle
+    .my-nickname,.users-online
       font-size: 1.7rem
 
-    .fa-bars,.fa-commenting-o,.fa-angle-right
+    .fa-angle-right
       font-size: 2rem
       width: 5rem
       line-height: 5rem
 
 @media all and (min-width: 1200px)
-  .game-wrap .top-menu
+  .chat-container .chat-top-menu
     height: 2.5rem
 
-    .menu-middle
+    .my-nickname,.users-online
       font-size: 1.2rem
 
-    .fa-bars,.fa-commenting-o,.fa-angle-right
+    .fa-angle-right
       font-size: 1.5rem
       width: 2.5rem
       line-height: 2.5rem

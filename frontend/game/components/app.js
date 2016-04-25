@@ -52,7 +52,7 @@ export default class App extends React.Component {
                 name: data.name,
                 score: data.score,
                 usersOnline: data.usersOnline,
-                inputArea: 1
+                inputArea: data.gameState === 2 ? 1 : 0
             })
         });
 
@@ -94,15 +94,19 @@ export default class App extends React.Component {
                 gratters: {
                     reason: 'you',
                     name: '',
-                    scoreGained: 7,
-                    scoreTotal: 389
+                    scoreGained: data.score,
+                    scoreTotal: data.totalScore
                 }
             })
         });
 
         this.socket.on('wrong answer', answer => {
             this.setState({
-                userVariants: this.state.userVariants.concat([answer])
+                userVariants: this.state.userVariants.concat([{
+                    answer: answer.answer,
+                    name: answer.name,
+                    style: this.getVariantPosition()
+                }])
             })
         });
 
@@ -131,7 +135,9 @@ export default class App extends React.Component {
             this.setState({
                 themesToChoose: data.themes,
                 timeLeft: data.timer,
+                question: 'Выбери тему следующего вопроса',
                 hint: '',
+                userVariants: [],
                 gratters: {}
             })
         });
@@ -208,6 +214,28 @@ export default class App extends React.Component {
 
     emit(event, payload) {
         this.socket.emit(event, payload);
+    }
+
+    getVariantPosition() {
+        var horizont = Math.floor( Math.random() * 100 );
+        var vertical = Math.floor( Math.random() * 100 );
+        var position = {};
+
+        if (horizont > 50) {
+            position.right = (100 - horizont) + '%';
+        } else {
+            position.left = (horizont) + '%';
+        }
+
+        if (vertical > 50) {
+            position.bottom = (100 - vertical) + '%';
+        } else {
+            position.top = (vertical) + '%';
+        }
+
+        position.backgroundColor = `rgba(${Math.round(Math.random()*255)},${Math.round(Math.random()*255)},${Math.round(Math.random()*255)},.5)`;
+
+        return position;
     }
 
     render() {

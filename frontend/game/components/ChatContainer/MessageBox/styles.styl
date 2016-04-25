@@ -1,0 +1,28 @@
+.chat-container .message-box
+  height: 80%
+  overflow-x: hidden
+  overflow-y: auto
+  padding-right: 1%
+
+  background-color: #ebf0fb
+
+  .message
+    width: 94%
+    margin: .5rem auto
+    padding: .5rem
+    border: 1px solid #dbdfe7
+    word-wrap: break-word
+    box-shadow: 4px 4px 6px -1px rgba(0,0,0,0.25)
+
+    .nickname
+      font-weight: 600
+      margin-right: .6rem
+      text-decoration: blink
+
+      &:after
+        content: ":"
+
+
+@media all and (max-width: 1023px)
+  .chat-container .message-box .message
+    font-size: 1.2rem

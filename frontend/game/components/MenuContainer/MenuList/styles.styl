@@ -1,0 +1,54 @@
+.menu-container .menu-list
+  height: 70%
+  overflow-y: auto
+
+  ul
+    list-style-type: none
+    margin: 0
+    padding: 0
+
+    li
+      padding: 0
+      margin: 0
+      font-size: 1em
+      vertical-align: baseline
+
+      a
+        display: inline-block
+        position: relative
+        width: 100%
+        font-size: 14px
+        text-decoration: none
+        color: #eaeaea
+
+        .fa
+          font-size: 2em
+          margin: 10px 20px
+
+        span
+          position: absolute
+          font-size: 1.3em
+          top: 15px
+
+      &:hover
+        background-color: #3a3c4d
+
+@media all and (max-width: 299px)
+  .menu-container .menu-list ul li a
+    .fa
+      margin: 8px 12px
+
+    span
+      font-size: 1em
+
+@media all and (max-height: 359px)
+  .menu-container .menu-list
+    height: 60%
+
+@media all and (min-height: 360px) and (max-height: 500px)
+  .menu-container .menu-list
+    height: 65%
+
+@media all and (min-height: 1024px)
+  .menu-container .menu-list
+    height: 70%

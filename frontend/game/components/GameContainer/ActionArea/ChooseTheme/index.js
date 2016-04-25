@@ -1,3 +1,5 @@
+import './styles.styl'
+
 import React from 'react';
 
 export default class ChooseTheme extends React.Component{
@@ -14,7 +16,7 @@ export default class ChooseTheme extends React.Component{
     render() {
         var themes = this.props.themes.map((theme, i) => {
             return(
-                <li className="theme_to_choose" onClick={this.chooseTheme} key={i}>
+                <li onClick={this.chooseTheme} key={i}>
                     {theme}
                 </li>
             )
@@ -22,7 +24,7 @@ export default class ChooseTheme extends React.Component{
 
 
         return(
-            <div className="themes_to_choose">
+            <div className="choose-theme">
                 <ul>
                     {themes}
                 </ul>

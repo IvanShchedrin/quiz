@@ -1,3 +1,5 @@
+import './styles.styl'
+
 import React, {PropTypes} from 'react'
 
 class Timer extends React.Component{
@@ -5,7 +7,7 @@ class Timer extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            timeLeft: 1,
+            timeLeft: '',
             timeoutID: 0
         };
 
@@ -41,7 +43,9 @@ class Timer extends React.Component{
 
     render() {
         return(
-            <div className="timer">{this.state.timeLeft < 1 ? '' : this.state.timeLeft}</div>
+            <div className="timer">
+                {this.state.timeLeft < 1 ? '' : this.state.timeLeft}
+            </div>
         )
     }
 

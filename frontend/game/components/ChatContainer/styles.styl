@@ -1,2 +1,24 @@
 .chat-container
-  display none
+  display: none
+  position: absolute
+  right: 0
+  top: 0
+  bottom: 0
+  overflow: hidden
+
+  flex: 1
+  flex-direction: column
+  width: 30%
+  border-left: 5px solid #3c4658
+  z-index: 6
+
+  &.chat-show
+    display: flex
+
+
+@media all and (max-width: 1023px)
+  .chat-container
+    width: 100%
+
+    .chat-top-menu .fa-angle-right
+      display: block
