@@ -17,10 +17,10 @@ coverage
 
 # Dependency directory
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
-node_modules
+# node_modules
 
 # Bower components
-public/vendor/bower_components/*
+# public/vendor/bower_components/*
 
 ### Covers for IDE JetBrains WebStorm ###
 
@@ -52,7 +52,7 @@ fabric.properties
 ### System and other covers
 
 # Question database
-questions.txt
+# questions.txt
 
 # Built js files
-public/js/build
+# public/js/build
